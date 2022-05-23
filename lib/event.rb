@@ -58,15 +58,19 @@ class Event
   end
 
   def get_events_page(year)
+    # def get_events_page(year, bw = nil)
     # Gets all events by year of competition
-    # Use this method to search
     if year > 2018
-      #get_new_bodyweight_events(year).css("#section-scroll div div.cards a:nth-child(1) div.container div div.col-md-5.col-12.not__cell__767__full p")
       get_new_bodyweight_events(year)
     elsif year < 2018
       get_old_bodyweight_events(year)
-    elsif year == 2018
-      get_2018_events
+      # TODO: Get events for 2018 (new and old bodyweight)
+      # elsif year == 2018
+
+      # elsif year == 2018 && bw == "new"
+      #   get_new_bodyweight_events(year)
+      # elsif year == 2018 && bw == "old"
+      #   get_old_bodyweight_events(year)
     end
   end
 
@@ -79,11 +83,9 @@ class Event
   end
 
   def get_2018_events
-    urls = ["https://iwf.sport/results/results-by-events/?event_years=2018", "https://iwf.sport/results/results-by-events/results-by-events-old-bw/?event_years=2018"]
-
-    urls.each do |url|
-      doc_from_2018 = Nokogiri::HTML(open(url))
-    end
+    old_bw = Nokogiri::HTML(open("https://iwf.sport/results/results-by-events/results-by-events-old-bw/?event_year=2018")).search("#section-scroll div.results")
+    new_bw = Nokogiri::HTML(open("https://iwf.sport/results/results-by-events/?event_year=2018"))
+    new_bw.at("#section-scroll div.results").add_child(old_bw)
   end
 
   def get_events_from_location
