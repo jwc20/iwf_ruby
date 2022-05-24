@@ -2,6 +2,8 @@ require "nokogiri"
 require "open-uri"
 require "pry"
 
+require_relative "./athlete.rb"
+
 class Event
   attr_accessor :name, :location, :date, :event_id
 
@@ -34,7 +36,7 @@ class Event
   end
 
   def make_events(year)
-    get_events_page(year).css("#section-scroll div div.cards a").each do |post|
+    self.get_events_page(year).css("#section-scroll div div.cards a").each do |post|
       event = Event.new
       event.name = post.css("div.container div div.col-md-5.col-12.not__cell__767__full p span").text
       event.location = post.css("div.container div div.col-md-3.col-4.not__cell__767 p").text.delete!("\n")
@@ -44,7 +46,7 @@ class Event
   end
 
   def print_events(years)
-    make_events(years)
+    self.make_events(years)
     Event.all.each do |event|
       if event.name
         puts "Name: #{event.name}"
@@ -59,9 +61,9 @@ class Event
     # def get_events_page(year, bw = nil)
     # Gets all events by year of competition
     if year > 2018
-      get_new_bodyweight_events(year)
+      self.get_new_bodyweight_events(year)
     elsif year < 2018
-      get_old_bodyweight_events(year)
+      self.get_old_bodyweight_events(year)
       # TODO: Get events for 2018 (new and old bodyweight)
       # elsif year == 2018
 
