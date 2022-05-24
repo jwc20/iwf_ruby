@@ -41,7 +41,12 @@ class Event
       event.name = post.css("div.container div div.col-md-5.col-12.not__cell__767__full p span").text
       event.location = post.css("div.container div div.col-md-3.col-4.not__cell__767 p").text.delete!("\n")
       event.date = post.css("div.container div div:nth-child(2) p").text.delete!("\n").rstrip
-      event.event_id = post.attribute("href").value
+
+      if year > 2018
+        event.event_url = "https://iwf.sport/results/results-by-events/#{post.attribute("href").value}"
+      elsif year < 2018
+        event.event_url = "https://iwf.sport/results/results-by-events/results-by-events-old-bw/#{post.attribute("href").value}"
+      end
     end
   end
 
@@ -52,7 +57,7 @@ class Event
         puts "Name: #{event.name}"
         puts "Location: #{event.location}"
         puts "Date: #{event.date}"
-        puts "Event ID: #{event.event_id}"
+        puts "Event url: #{event.event_url}"
       end
     end
   end
@@ -93,8 +98,31 @@ class Event
     # Get events from the location
   end
 
-  def get_all_athlete_names_from_event(url)
-    # Get only name of athletes in the event
+  def get_event_doc(url)
+    # Get document for a single event
+    Nokogiri::HTML(open(url))
+  end
+
+  def get_all_men_athlete_names_from_event(url)
+    # Get only the name of male athletes in the event
+    #men_total > div:nth-child(2) > div:nth-child(2) > div > div > a > div > div.col-7.not__cell__767 > p
+    doc = get_event_doc(url)
+    doc.css("#men_total div div a div div.col-7.not__cell__767").text
+  end
+
+  def get_all_women_athlete_names_from_event(url)
+    # Get only the name of female athletes in the event
+    #men_total > div:nth-child(2) > div:nth-child(2) > div > div > a > div > div.col-7.not__cell__767 > p
+    doc = get_event_doc(url)
+    doc.css("#women_total div div a div div.col-7.not__cell__767").text
+  end
+
+  def get_all_athlete_informations_and_results_from_event(url)
+    # Get all athlete informations and results from the event
+    # name, athlete_id, nation, born, category, bweight, group,
+    # rank_s, snatch1, snatch2, snatch3,
+    # rank_cj, jerk1, jerk2, jerk3,
+    # rank, snatch, jerk, total
   end
 
   def get_athlete_informations_from_event(athlete)
@@ -115,15 +143,6 @@ class Event
   def get_athlete_total_results_from_event(athlete)
     # Get totals (highest snatch + highest clean and jerk) from the event
     # rank, snatch, jerk, total
-  end
-
-  def get_all_athlete_informations_and_results_from_event(url)
-    # Get all athlete informations and results from the event
-    # name, athlete_id, nation, born, category, bweight, group,
-    # rank_s, snatch1, snatch2, snatch3,
-    # rank_cj, jerk1, jerk2, jerk3,
-    # rank, snatch, jerk, total
-
   end
 end
 
