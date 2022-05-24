@@ -91,33 +91,38 @@ class Event
     # Get events from the location
   end
 
-  def get_athletes_from_event(url)
+  def get_all_athlete_names_from_event(url)
     # Get only name of athletes in the event
   end
 
-  def get_athletes_information_from_event(athlete)
+  def get_athlete_informations_from_event(athlete)
     # Get information about the athlete from the event
     # name, athlete_id, nation, born, category, bweight, group
   end
 
-  def get_snatch_results_from_event(athlete)
+  def get_athlete_snatch_results_from_event(athlete)
     # Get only snatch results from the event
-    # rank_s, snatch1, snatch2, snatch3, snatch
+    # rank_s, snatch1, snatch2, snatch3
   end
 
-  def get_clean_and_jerk_results_from_event(athlete)
+  def get_athlete_clean_and_jerk_results_from_event(athlete)
     # Get only clean and jerk results from the event
-    # rank_cj, jerk1, jerk2, jerk3, jerk
+    # rank_cj, jerk1, jerk2, jerk3
   end
 
-  def get_total_results_from_event(athlete)
+  def get_athlete_total_results_from_event(athlete)
     # Get totals (highest snatch + highest clean and jerk) from the event
-    # snatch, jerk, total
+    # rank, snatch, jerk, total
   end
 
-  # def get_results_from_event(url)
-  #   # Get all results from the event
-  # end
+  def get_all_athlete_informations_and_results_from_event(url)
+    # Get all athlete informations and results from the event
+    # name, athlete_id, nation, born, category, bweight, group,
+    # rank_s, snatch1, snatch2, snatch3,
+    # rank_cj, jerk1, jerk2, jerk3,
+    # rank, snatch, jerk, total
+
+  end
 end
 
 binding.pry
