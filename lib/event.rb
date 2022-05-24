@@ -42,7 +42,7 @@ class Event
       event.location = post.css("div.container div div.col-md-3.col-4.not__cell__767 p").text.delete!("\n")
       event.date = post.css("div.container div div:nth-child(2) p").text.delete!("\n").rstrip
 
-      if year > 2018
+      if year 2018
         event.event_url = "https://iwf.sport/results/results-by-events/#{post.attribute("href").value}"
       elsif year < 2018
         event.event_url = "https://iwf.sport/results/results-by-events/results-by-events-old-bw/#{post.attribute("href").value}"
@@ -65,7 +65,7 @@ class Event
   def get_events_page(year)
     # def get_events_page(year, bw = nil)
     # Gets all events by year of competition
-    if year > 2018
+    if year 2018
       self.get_new_bodyweight_events(year)
     elsif year < 2018
       self.get_old_bodyweight_events(year)
@@ -119,43 +119,38 @@ class Event
     # Get all athlete informations and results from the event
     # USING TOTALS
     doc = get_event_doc(url)
-    page = doc.css("#men_total div.cards")
-
-    page.each do |card|
+    cards = doc.css("#men_total div.card")
+    cards.each do |card|
       athlete = Athlete.new
       # name
-      athlete.name = card.css("div div a div div.col-7.not__cell__767").text.delete!("\n")
-      # rank
-      athlete.rank = card.css("div div a div div.col-2.not__cell__767 p")[0].children[2].text.delete!("\n")
-      # born
-      athlete.born = card.css("div div div.col-md-4 div div.col-5.not__cell__767 p")[0].children[2].text.delete!("\n")
-      # bweight
-      athlete.bweight = card.css("div div div.col-md-4 div div.col-4.not__cell__767 p")[0].children[2].text.delete!("\n")
-      # group
-      athlete.group = card.css("div div div.col-md-4 div div.col-3.not__cell__767 p")[0].children[2].text.delete!("\n")
-      # snatch
-      athlete.snatch = card.css("div div div.col-md-3 div div:nth-child(1) p strong").text
-      # jerk
-      athlete.jerk = card.css("div div div.col-md-3 div div:nth-child(2) p strong").text
-      # total
-      athlete.total = card.css("div div div.col-md-3 div div:nth-child(3) p strong")[0].children[1].text
-      # nation
-      athlete.nation = card.css("div div a div div.col-3.not__cell__767 p").text.delete!("\n")
+      athlete.name = card.css("div.col-7.not__cell__767 p").text.delete!("\n")
 
-      # FIXME:
-      # jerk
-      # name
-      # nation
-      # rank
-      # snatch
-
+      # Need to check if node is not empty
+      if athlete.name && athlete.name != ""
+        # rank
+        athlete.rank = card.css("div.col-2.not__cell__767 p").text.delete!("\n")
+        # nation
+        athlete.nation = card.css("div div a div div.col-3.not__cell__767 p").text.delete!("\n")
+        # born
+        athlete.born = card.css("div.col-5.not__cell__767 p")[0].children[2].text.delete!("\n")
+        # bweight
+        athlete.bweight = card.css("div.col-4.not__cell__767 p")[0].children[2].text.delete!("\n")
+        # group
+        athlete.group = card.css("div div div.col-md-4 div div.col-3.not__cell__767 p")[0].children[2].text.delete!("\n")
+        # snatch
+        athlete.snatch = card.css("div div div.col-md-3 div div:nth-child(1) p strong").children.text
+        # jerk
+        athlete.jerk = card.css("div div div.col-md-3 div div:nth-child(2) p strong").text
+        #total
+        athlete.total = card.css("div div div.col-md-3 div div:nth-child(3) p strong")[0].children[1].text
+      end
     end
   end
 
   def print_athletes(url)
     self.make_all_men_athlete_informations_and_results_from_event(url)
     Athlete.all.each do |athlete|
-      if athlete.name
+      if athlete.name && athlete.name != ""
         puts "Name: #{athlete.name}"
       end
     end
@@ -191,7 +186,7 @@ class Event
   end
 end
 
-# Event.new.get_all_men_athlete_informations_and_results_from_event("https://iwf.sport/results/results-by-events/?event_id=529")
+# Event.new.make_all_men_athlete_informations_and_results_from_event("https://iwf.sport/results/results-by-events/?event_id=529")
 Event.new.print_athletes("https://iwf.sport/results/results-by-events/?event_id=517")
 
 binding.pry
