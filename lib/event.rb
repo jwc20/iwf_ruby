@@ -152,6 +152,15 @@ class Event
     Athlete.all.each do |athlete|
       if athlete.name && athlete.name != ""
         puts "Name: #{athlete.name}"
+        puts "Rank: #{athlete.rank}"
+        puts "Nation: #{athlete.nation}"
+        puts "Born: #{athlete.born}"
+        puts "Body weight: #{athlete.bweight}"
+        puts "Group: #{athlete.group}"
+        puts "Snatch: #{athlete.snatch}"
+        puts "Clean and Jerk: #{athlete.jerk}"
+        puts "Total: #{athlete.total}"
+        puts ""
       end
     end
   end
@@ -187,6 +196,6 @@ class Event
 end
 
 # Event.new.make_all_men_athlete_informations_and_results_from_event("https://iwf.sport/results/results-by-events/?event_id=529")
-Event.new.print_athletes("https://iwf.sport/results/results-by-events/?event_id=517")
+# Event.new.print_athletes("https://iwf.sport/results/results-by-events/?event_id=517")
 
-binding.pry
+# binding.pry

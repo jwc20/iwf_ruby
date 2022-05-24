@@ -22,6 +22,7 @@ athlete.jerk = card.css("div div div.col-md-3 div div:nth-child(2) p strong").te
 # total
 athlete.total = card.css("div div div.col-md-3 div div:nth-child(3) p strong")[0].children[1].text
 
+ ruby -r "./lib/event.rb" -e "Event.new.print_athletes 'https://iwf.sport/results/results-by-events/results-by-events-old-bw/?event_id=436'"
 
 
 div div a div div.col-3.not__cell__767
