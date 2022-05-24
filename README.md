@@ -2,7 +2,16 @@
 
 ## TODO:
 
-- Fix get_2018_events method
+- [ ] Fix get_2018_events method
+- [ ] Make 
+```
+doc.css("#men_total div div a div div.col-7.not__cell__767").text
+
+doc.css("#women_total div div a div div.col-7.not__cell__767").text
+```
+into separate methods(change men_total to men_snatch)
+
+
 
 # IwfRuby
 

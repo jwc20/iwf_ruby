@@ -105,16 +105,60 @@ class Event
 
   def get_all_men_athlete_names_from_event(url)
     # Get only the name of male athletes in the event
-    #men_total > div:nth-child(2) > div:nth-child(2) > div > div > a > div > div.col-7.not__cell__767 > p
     doc = get_event_doc(url)
     doc.css("#men_total div div a div div.col-7.not__cell__767").text
   end
 
   def get_all_women_athlete_names_from_event(url)
     # Get only the name of female athletes in the event
-    #men_total > div:nth-child(2) > div:nth-child(2) > div > div > a > div > div.col-7.not__cell__767 > p
     doc = get_event_doc(url)
     doc.css("#women_total div div a div div.col-7.not__cell__767").text
+  end
+
+  def make_all_men_athlete_informations_and_results_from_event(url)
+    # Get all athlete informations and results from the event
+    # USING TOTALS
+    doc = get_event_doc(url)
+    page = doc.css("#men_total div.cards")
+
+    page.each do |card|
+      athlete = Athlete.new
+      # name
+      athlete.name = card.css("div div a div div.col-7.not__cell__767").text.delete!("\n")
+      # rank
+      athlete.rank = card.css("div div a div div.col-2.not__cell__767 p")[0].children[2].text.delete!("\n")
+      # born
+      athlete.born = card.css("div div div.col-md-4 div div.col-5.not__cell__767 p")[0].children[2].text.delete!("\n")
+      # bweight
+      athlete.bweight = card.css("div div div.col-md-4 div div.col-4.not__cell__767 p")[0].children[2].text.delete!("\n")
+      # group
+      athlete.group = card.css("div div div.col-md-4 div div.col-3.not__cell__767 p")[0].children[2].text.delete!("\n")
+      # snatch
+      athlete.snatch = card.css("div div div.col-md-3 div div:nth-child(1) p strong").text
+      # jerk
+      athlete.jerk = card.css("div div div.col-md-3 div div:nth-child(2) p strong").text
+      # total
+      athlete.total = card.css("div div div.col-md-3 div div:nth-child(3) p strong")[0].children[1].text
+      # nation
+      athlete.nation = card.css("div div a div div.col-3.not__cell__767 p").text.delete!("\n")
+
+      # FIXME:
+      # jerk
+      # name
+      # nation
+      # rank
+      # snatch
+
+    end
+  end
+
+  def print_athletes(url)
+    self.make_all_men_athlete_informations_and_results_from_event(url)
+    Athlete.all.each do |athlete|
+      if athlete.name
+        puts "Name: #{athlete.name}"
+      end
+    end
   end
 
   def get_all_athlete_informations_and_results_from_event(url)
@@ -123,6 +167,7 @@ class Event
     # rank_s, snatch1, snatch2, snatch3,
     # rank_cj, jerk1, jerk2, jerk3,
     # rank, snatch, jerk, total
+    # doc = get_event_doc(url)
   end
 
   def get_athlete_informations_from_event(athlete)
@@ -145,5 +190,8 @@ class Event
     # rank, snatch, jerk, total
   end
 end
+
+# Event.new.get_all_men_athlete_informations_and_results_from_event("https://iwf.sport/results/results-by-events/?event_id=529")
+Event.new.print_athletes("https://iwf.sport/results/results-by-events/?event_id=517")
 
 binding.pry

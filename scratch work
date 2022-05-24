@@ -1,0 +1,21 @@
+
+# Note: scraping done once inside "#men_total div.athlete. = cards"
+
+# name
+athlete.name = card.css("div div a div div.col-7.not__cell__767").text.delete!("\n")
+# rank
+athlete.rank = card.css("div div a div div.col-2.not__cell__767 p")[0].children[2].text.delete!("\n")
+# born
+athlete.born = card.css("div div div.col-md-4 div div.col-5.not__cell__767 p")[0].children[2].text.delete!("\n")
+# bweight
+athlete.bweight = card.css("div div div.col-md-4 div div.col-4.not__cell__767 p")[0].children[2].text.delete!("\n")
+# group
+athlete.group = card.css("div div div.col-md-4 div div.col-3.not__cell__767 p")[0].children[2].text.delete!("\n")
+# snatch
+athlete.snatch = card.css("div div div.col-md-3 div div:nth-child(1) p strong").text
+# jerk
+athlete.jerk = card.css("div div div.col-md-3 div div:nth-child(2) p strong").text
+# total
+athlete.total = card.css("div div div.col-md-3 div div:nth-child(3) p strong")[0].children[1].text
+# nation
+athlete.nation = card.css("div div a div div.col-3.not__cell__767 p").text.delete!("\n")
