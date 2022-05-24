@@ -79,19 +79,19 @@ class Event
     end
   end
 
+  def get_2018_events
+    # FIXME:
+    old_bw = Nokogiri::HTML(open("https://iwf.sport/results/results-by-events/results-by-events-old-bw/?event_year=2018")).search("#section-scroll div.results")
+    new_bw = Nokogiri::HTML(open("https://iwf.sport/results/results-by-events/?event_year=2018"))
+    new_bw.at("#section-scroll div.results").add_child(old_bw)
+  end
+
   def get_new_bodyweight_events(year)
     Nokogiri::HTML(open("https://iwf.sport/results/results-by-events/?event_year=#{year}"))
   end
 
   def get_old_bodyweight_events(year)
     Nokogiri::HTML(open("https://iwf.sport/results/results-by-events/results-by-events-old-bw/?event_year=#{year}"))
-  end
-
-  def get_2018_events
-    # FIXME:
-    old_bw = Nokogiri::HTML(open("https://iwf.sport/results/results-by-events/results-by-events-old-bw/?event_year=2018")).search("#section-scroll div.results")
-    new_bw = Nokogiri::HTML(open("https://iwf.sport/results/results-by-events/?event_year=2018"))
-    new_bw.at("#section-scroll div.results").add_child(old_bw)
   end
 
   def get_events_from_location(location)
@@ -115,7 +115,8 @@ class Event
     doc.css("#women_total div div a div div.col-7.not__cell__767").text
   end
 
-  def make_all_men_athlete_informations_and_results_from_event(url)
+  # def make_all_men_athlete_informations_and_results_from_event(url)
+  def make_results_men(url)
     # Get all athlete informations and results from the event
     # USING TOTALS
     doc = get_event_doc(url)
@@ -147,8 +148,43 @@ class Event
     end
   end
 
+  # def make_all_women_athlete_informations_and_results_from_event(url)
+  def make_results_women(url)
+    # Get all athlete informations and results from the event
+    # USING TOTALS
+    doc = get_event_doc(url)
+    cards = doc.css("#women_total div.card")
+    cards.each do |card|
+      athlete = Athlete.new
+      # name
+      athlete.name = card.css("div.col-7.not__cell__767 p").text.delete!("\n")
+
+      # Need to check if node is not empty
+      if athlete.name && athlete.name != ""
+        # rank
+        athlete.rank = card.css("div.col-2.not__cell__767 p").text.delete!("\n")
+        # nation
+        athlete.nation = card.css("div div a div div.col-3.not__cell__767 p").text.delete!("\n")
+        # born
+        athlete.born = card.css("div.col-5.not__cell__767 p")[0].children[2].text.delete!("\n")
+        # bweight
+        athlete.bweight = card.css("div.col-4.not__cell__767 p")[0].children[2].text.delete!("\n")
+        # group
+        athlete.group = card.css("div div div.col-md-4 div div.col-3.not__cell__767 p")[0].children[2].text.delete!("\n")
+        # snatch
+        athlete.snatch = card.css("div div div.col-md-3 div div:nth-child(1) p strong").children.text
+        # jerk
+        athlete.jerk = card.css("div div div.col-md-3 div div:nth-child(2) p strong").text
+        #total
+        athlete.total = card.css("div div div.col-md-3 div div:nth-child(3) p strong")[0].children[1].text
+      end
+    end
+  end
+
   def print_athletes(url)
-    self.make_all_men_athlete_informations_and_results_from_event(url)
+    # self.make_all_men_athlete_informations_and_results_from_event(url)
+    # self.make_results_men(url)
+    self.make_results_women(url)
     Athlete.all.each do |athlete|
       if athlete.name && athlete.name != ""
         puts "Name: #{athlete.name}"
@@ -194,8 +230,5 @@ class Event
     # rank, snatch, jerk, total
   end
 end
-
-# Event.new.make_all_men_athlete_informations_and_results_from_event("https://iwf.sport/results/results-by-events/?event_id=529")
-# Event.new.print_athletes("https://iwf.sport/results/results-by-events/?event_id=517")
 
 # binding.pry
