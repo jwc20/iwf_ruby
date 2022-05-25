@@ -5,7 +5,7 @@ require "pry"
 require_relative "./athlete.rb"
 
 class Event
-  attr_accessor :name, :location, :date, :event_id
+  attr_accessor :name, :location, :date, :event_url
 
   @@all = []
 
