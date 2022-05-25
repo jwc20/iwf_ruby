@@ -232,5 +232,3 @@ class Event
     # rank, snatch, jerk, total
   end
 end
-
-binding.pry
