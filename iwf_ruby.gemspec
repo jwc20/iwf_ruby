@@ -5,14 +5,14 @@ require_relative "lib/iwf_ruby/version"
 Gem::Specification.new do |spec|
   spec.name = "iwf_ruby"
   spec.version = IwfRuby::VERSION
-  spec.authors = ["jwc20"]
-  spec.email = ["choij2015@gmail.com"]
+  spec.authors = ["cwj3000"]
+  spec.email = ["jac006@ucsd.edu"]
 
   spec.summary = "Fetch and parser for the IWF(Internation Weightlifting Federation) website"
   spec.homepage = "https://github.com/jwc20/iwf_ruby/"
   spec.required_ruby_version = ">= 2.6.0"
 
-  spec.metadata["allowed_push_host"] = "TODO: Set to your gem server 'https://example.com'"
+  # spec.metadata["allowed_push_host"] = "TODO: Set to your gem server 'https://example.com'"
 
   spec.metadata["homepage_uri"] = spec.homepage
   spec.metadata["source_code_uri"] = "https://github.com/jwc20/iwf_ruby/"
