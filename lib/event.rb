@@ -44,9 +44,9 @@ class Event
       event.location = post.css("div.container div div.col-md-3.col-4.not__cell__767 p").text.delete!("\n")
       event.date = post.css("div.container div div:nth-child(2) p").text.delete!("\n").rstrip
 
-      if year > 2018
+      if year.to_i > 2018
         event.event_url = "https://iwf.sport/results/results-by-events/#{post.attribute("href").value}"
-      elsif year < 2018
+      elsif year.to_i < 2018
         event.event_url = "https://iwf.sport/results/results-by-events/results-by-events-old-bw/#{post.attribute("href").value}"
       end
     end
@@ -67,7 +67,7 @@ class Event
   def get_events_page(year)
     # def get_events_page(year, bw = nil)
     # Gets all events by year of competition
-    if year 2018
+    if year.to_i > 2018
       self.get_new_bodyweight_events(year)
     elsif year < 2018
       self.get_old_bodyweight_events(year)
