@@ -44,7 +44,7 @@ class Event
       event.location = post.css("div.container div div.col-md-3.col-4.not__cell__767 p").text.delete!("\n")
       event.date = post.css("div.container div div:nth-child(2) p").text.delete!("\n").rstrip
 
-      if year 2018
+      if year > 2018
         event.event_url = "https://iwf.sport/results/results-by-events/#{post.attribute("href").value}"
       elsif year < 2018
         event.event_url = "https://iwf.sport/results/results-by-events/results-by-events-old-bw/#{post.attribute("href").value}"
