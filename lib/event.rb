@@ -22,6 +22,7 @@ class Event
   end
 
   def get_years_available
+    # FIXME
     # Gets all years available in new bodyweight and old bodyweight events page
     years = Array.new
     urls = ["https://iwf.sport/results/results-by-events/", "https://iwf.sport/results/results-by-events/results-by-events-old-bw/"]
@@ -33,6 +34,7 @@ class Event
         years.push(year.text) unless years.include?(year.text)
       end
     end
+    years
   end
 
   def make_events(year)
@@ -231,4 +233,4 @@ class Event
   end
 end
 
-# binding.pry
+binding.pry

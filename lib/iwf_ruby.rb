@@ -56,6 +56,7 @@ module IwfRuby
           years.push(year.text) unless years.include?(year.text)
         end
       end
+      years
     end
 
     def make_events(year)
