@@ -85,7 +85,7 @@ module IwfRuby
     def print_events(year)
       self.make_events(year)
       Event.all.each do |event|
-        if event.name
+        if event.name && event.name != ""
           puts "Name: #{event.name}"
           puts "Location: #{event.location}"
           puts "Date: #{event.date}"
