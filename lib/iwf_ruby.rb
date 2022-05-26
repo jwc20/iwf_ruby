@@ -68,13 +68,16 @@ module IwfRuby
       self.get_events_page(year).css("#section-scroll div div.cards a").each do |post|
         event = Event.new
         event.name = post.css("div.container div div.col-md-5.col-12.not__cell__767__full p span").text
-        event.location = post.css("div.container div div.col-md-3.col-4.not__cell__767 p").text.delete!("\n")
-        event.date = post.css("div.container div div:nth-child(2) p").text.delete!("\n").rstrip
 
-        if year.to_i > 2018
-          event.event_url = "https://iwf.sport/results/results-by-events/#{post.attribute("href").value}"
-        elsif year.to_i < 2018
-          event.event_url = "https://iwf.sport/results/results-by-events/results-by-events-old-bw/#{post.attribute("href").value}"
+        if event.name && event.name != ""
+          event.location = post.css("div.container div div.col-md-3.col-4.not__cell__767 p").text.delete!("\n")
+          event.date = post.css("div.container div div:nth-child(2) p").text.delete!("\n").rstrip
+
+          if year.to_i > 2018
+            event.event_url = "https://iwf.sport/results/results-by-events/#{post.attribute("href").value}"
+          elsif year.to_i < 2018
+            event.event_url = "https://iwf.sport/results/results-by-events/results-by-events-old-bw/#{post.attribute("href").value}"
+          end
         end
       end
     end
