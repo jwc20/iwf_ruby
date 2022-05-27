@@ -1,17 +1,13 @@
 # frozen_string_literal: true
-
 require_relative "iwf_ruby/version"
 require_relative "./athlete.rb"
 require_relative "./event.rb"
-
 require "nokogiri"
 require "open-uri"
 require "pry"
 
 module IwfRuby
-
   class Scraper
-
     def get_years_available
       # FIXME
       # Gets all years available in new bodyweight and old bodyweight events page
@@ -225,11 +221,7 @@ module IwfRuby
       # Get totals (highest snatch + highest clean and jerk) from the event
       # rank, snatch, jerk, total
     end
-
   end
 
   class Error < StandardError; end
-  binding.pry
-
 end
-
