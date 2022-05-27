@@ -3,6 +3,10 @@
 ## TODO:
 
 - [ ] Fix get_2018_events method
+- [ ] Create README Usage
+- [ ] Create README List of methods and it's description
+- [ ] Fix naming convention
+
 
 ## Scraped Data:
 
