@@ -9,44 +9,8 @@ require "open-uri"
 require "pry"
 
 module IwfRuby
-  class Athlete
-    # name, athlete_id, nation, born, category, bweight, group,
-    # rank_s, snatch1, snatch2, snatch3,
-    # rank_cj, jerk1, jerk2, jerk3,
-    # rank, snatch, jerk, total
-    attr_accessor :name, :athlete_id, :nation, :born, :category, :bweight, :group, :rank_s, :snatch1, :snatch2, :snatch3, :rank_cj, :jerk1, :jerk2, :jerk3, :rank, :snatch, :jerk, :total
 
-    @@all = []
-
-    def initialize
-      @@all << self
-    end
-
-    def self.all
-      @@all
-    end
-
-    def self.reset_all
-      @@all.clear
-    end
-  end
-
-  class Event
-    attr_accessor :name, :location, :date, :event_url
-
-    @@all = []
-
-    def initialize
-      @@all << self
-    end
-
-    def self.all
-      @@all
-    end
-
-    def self.reset_all
-      @@all.clear
-    end
+  class Scraper
 
     def get_years_available
       # FIXME
@@ -261,9 +225,11 @@ module IwfRuby
       # Get totals (highest snatch + highest clean and jerk) from the event
       # rank, snatch, jerk, total
     end
+
   end
 
   class Error < StandardError; end
+  binding.pry
 
-  # Your code goes here...
 end
+

@@ -4,6 +4,31 @@
 
 - [ ] Fix get_2018_events method
 
+## Scraped Data:
+
+### Athlete:
+
+- name
+- birthdate
+- nation
+- athlete_url
+
+### Event Unit Entry (Result entry for one athlete):
+
+- bodyweight
+- group
+- snatch1, snatch2, snatch3, snatch
+- jerk1, jerk2, jerk3, jerk
+- total
+- rank_sn, rank_cj, rank
+
+### Event:
+
+- name
+- location
+- date
+- event_url
+
 # IwfRuby
 
 Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/iwf_ruby`. To experiment with that code, run `bin/console` for an interactive prompt.
