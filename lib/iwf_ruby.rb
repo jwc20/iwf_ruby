@@ -87,10 +87,6 @@ module IwfRuby
       Nokogiri::HTML(open("https://iwf.sport/results/results-by-events/results-by-events-old-bw/?event_year=#{year}"))
     end
 
-    def get_events_from_location(location)
-      # Get events from the location
-    end
-
     def get_event_doc(url)
       # Get document for a single event
       Nokogiri::HTML(open(url))
@@ -114,32 +110,42 @@ module IwfRuby
       # USING TOTALS
       doc = get_event_doc(url)
       cards = doc.css('#men_total div.card')
+      # binding.pry
       cards.each do |card|
         athlete = AthleteResult.new
-        # name
         athlete.name = card.css('div.col-7.not__cell__767 p').text.delete!("\n")
 
         # Need to check if node is not empty
         next unless athlete.name && athlete.name != ''
-
-        # rank
-        athlete.rank = card.css('div.col-2.not__cell__767 p').text.delete!("\n")
-        # nation
         athlete.nation = card.css('div div a div div.col-3.not__cell__767 p').text.delete!("\n")
-        # birthdate
         athlete.birthdate = card.css('div.col-5.not__cell__767 p')[0].children[2].text.delete!("\n")
-        # bweight
+        athlete.athlete_url = card.css("div div a.col-md-5.title").attribute('href').value
+        
+        # category
+        # athlete.category =
+
         athlete.bweight = card.css('div.col-4.not__cell__767 p')[0].children[2].text.delete!("\n")
-        # group
         athlete.group = card.css('div div div.col-md-4 div div.col-3.not__cell__767 p')[0].children[2].text.delete!("\n")
-        # snatch
+        
+        # snatch1
+        # snatch2
+        # snatch3
+
+        # jerk1
+        # jerk2
+        # jerk3
+
         athlete.snatch = card.css('div div div.col-md-3 div div:nth-child(1) p strong').children.text
-        # jerk
         athlete.jerk = card.css('div div div.col-md-3 div div:nth-child(2) p strong').text
-        # total
         athlete.total = card.css('div div div.col-md-3 div div:nth-child(3) p strong')[0].children[1].text
+        
+        # rank_s
+        # rank_cj
+        athlete.rank = card.css('div.col-2.not__cell__767 p').text.delete!("\n")
+
       end
     end
+
 
     # def make_all_women_athlete_informations_and_results_from_event(url)
     def make_results_women(url)
@@ -149,35 +155,46 @@ module IwfRuby
       cards = doc.css('#women_total div.card')
       cards.each do |card|
         athlete = AthleteResult.new
-        # name
         athlete.name = card.css('div.col-7.not__cell__767 p').text.delete!("\n")
 
         # Need to check if node is not empty
         next unless athlete.name && athlete.name != ''
 
-        # rank
         athlete.rank = card.css('div.col-2.not__cell__767 p').text.delete!("\n")
-        # nation
         athlete.nation = card.css('div div a div div.col-3.not__cell__767 p').text.delete!("\n")
-        # birthdate
         athlete.birthdate = card.css('div.col-5.not__cell__767 p')[0].children[2].text.delete!("\n")
-        # bweight
         athlete.bweight = card.css('div.col-4.not__cell__767 p')[0].children[2].text.delete!("\n")
-        # group
         athlete.group = card.css('div div div.col-md-4 div div.col-3.not__cell__767 p')[0].children[2].text.delete!("\n")
-        # snatch
         athlete.snatch = card.css('div div div.col-md-3 div div:nth-child(1) p strong').children.text
-        # jerk
         athlete.jerk = card.css('div div div.col-md-3 div div:nth-child(2) p strong').text
-        # total
         athlete.total = card.css('div div div.col-md-3 div div:nth-child(3) p strong')[0].children[1].text
       end
     end
 
-    def print_athletes(url)
+    def print_male_athletes(url)
       # self.make_all_men_athlete_informations_and_results_from_event(url)
-      # self.make_results_men(url)
-      make_results_women(url)
+      self.make_results_men(url)
+      AthleteResult.all.each do |athlete|
+        next unless athlete.name && athlete.name != ''
+
+        puts "Name: #{athlete.name}"
+        puts "Nation: #{athlete.nation}"
+        puts "Birthdate: #{athlete.birthdate}"
+        puts "URL:  #{athlete.athlete_url}"
+        puts "Category: #{athlete.category}"
+        puts "Body weight: #{athlete.bweight}"
+        puts "Group: #{athlete.group}"
+        puts "Snatch: #{athlete.snatch}"
+        puts "Clean and Jerk: #{athlete.jerk}"
+        puts "Total: #{athlete.total}"
+        puts "Rank: #{athlete.rank}"
+        puts ''
+      end
+    end
+
+    def print_female_athletes(url)
+      # self.make_all_men_athlete_informations_and_results_from_event(url)
+      self.make_results_women(url)
       AthleteResult.all.each do |athlete|
         next unless athlete.name && athlete.name != ''
 
@@ -194,9 +211,15 @@ module IwfRuby
       end
     end
 
+    ############################################################################
+    # TODOs:
+    def get_events_from_location(location)
+      # Get events from the location
+    end
+
     def get_all_athlete_informations_and_results_from_event(url)
       # Get all athlete informations and results from the event
-      # name, athlete_id, nation, birthdate, category, bweight, group,
+      # name, athlete_url, nation, birthdate, category, bweight, group,
       # rank_s, snatch1, snatch2, snatch3,
       # rank_cj, jerk1, jerk2, jerk3,
       # rank, snatch, jerk, total
@@ -205,7 +228,7 @@ module IwfRuby
 
     def get_athlete_informations_from_event(athlete)
       # Get information about the athlete from the event
-      # name, athlete_id, nation, birthdate, category, bweight, group
+      # name, athlete_url, nation, birthdate, category, bweight, group
     end
 
     def get_athlete_snatch_results_from_event(athlete)
@@ -223,8 +246,15 @@ module IwfRuby
       # rank, snatch, jerk, total
     end
   end
+  ############################################################################
 
   class Error < StandardError; end
 end
 
-binding.pry
+
+
+
+# IwfRuby::Scraper.new.make_results_men("https://iwf.sport/results/results-by-events/?event_id=529")
+
+
+# binding.pry

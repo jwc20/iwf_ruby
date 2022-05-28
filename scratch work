@@ -31,3 +31,25 @@ div div a div div.col-3.not__cell__767
 
 
 
+athlete.athlete_url = card.css("div div a.col-md-5.title").attribute('href').value
+
+
+cards.css("#men_total div:nth-child(1) div div div")
+document.querySelector("#men_total div:nth-child(1) div div div h2")
+
+#men_total div div div div h2
+
+#card.css("#men_total div:nth-child(2) div:nth-child(2) div div a")
+
+
+
+def get_category_men(url)
+  doc = get_event_doc(url)
+  doc.css('#men_total div div div div h2').text
+end
+
+
+
+
+
+
