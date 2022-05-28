@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require_relative 'iwf_ruby/version'
-require_relative './athlete'
+require_relative './athlete_result'
 require_relative './event'
 require 'nokogiri'
 require 'open-uri'
@@ -115,7 +115,7 @@ module IwfRuby
       doc = get_event_doc(url)
       cards = doc.css('#men_total div.card')
       cards.each do |card|
-        athlete = Athlete.new
+        athlete = AthleteResult.new
         # name
         athlete.name = card.css('div.col-7.not__cell__767 p').text.delete!("\n")
 
@@ -126,8 +126,8 @@ module IwfRuby
         athlete.rank = card.css('div.col-2.not__cell__767 p').text.delete!("\n")
         # nation
         athlete.nation = card.css('div div a div div.col-3.not__cell__767 p').text.delete!("\n")
-        # born
-        athlete.born = card.css('div.col-5.not__cell__767 p')[0].children[2].text.delete!("\n")
+        # birthdate
+        athlete.birthdate = card.css('div.col-5.not__cell__767 p')[0].children[2].text.delete!("\n")
         # bweight
         athlete.bweight = card.css('div.col-4.not__cell__767 p')[0].children[2].text.delete!("\n")
         # group
@@ -148,7 +148,7 @@ module IwfRuby
       doc = get_event_doc(url)
       cards = doc.css('#women_total div.card')
       cards.each do |card|
-        athlete = Athlete.new
+        athlete = AthleteResult.new
         # name
         athlete.name = card.css('div.col-7.not__cell__767 p').text.delete!("\n")
 
@@ -159,8 +159,8 @@ module IwfRuby
         athlete.rank = card.css('div.col-2.not__cell__767 p').text.delete!("\n")
         # nation
         athlete.nation = card.css('div div a div div.col-3.not__cell__767 p').text.delete!("\n")
-        # born
-        athlete.born = card.css('div.col-5.not__cell__767 p')[0].children[2].text.delete!("\n")
+        # birthdate
+        athlete.birthdate = card.css('div.col-5.not__cell__767 p')[0].children[2].text.delete!("\n")
         # bweight
         athlete.bweight = card.css('div.col-4.not__cell__767 p')[0].children[2].text.delete!("\n")
         # group
@@ -178,13 +178,13 @@ module IwfRuby
       # self.make_all_men_athlete_informations_and_results_from_event(url)
       # self.make_results_men(url)
       make_results_women(url)
-      Athlete.all.each do |athlete|
+      AthleteResult.all.each do |athlete|
         next unless athlete.name && athlete.name != ''
 
         puts "Name: #{athlete.name}"
         puts "Rank: #{athlete.rank}"
         puts "Nation: #{athlete.nation}"
-        puts "Born: #{athlete.born}"
+        puts "Born: #{athlete.birthdate}"
         puts "Body weight: #{athlete.bweight}"
         puts "Group: #{athlete.group}"
         puts "Snatch: #{athlete.snatch}"
@@ -196,7 +196,7 @@ module IwfRuby
 
     def get_all_athlete_informations_and_results_from_event(url)
       # Get all athlete informations and results from the event
-      # name, athlete_id, nation, born, category, bweight, group,
+      # name, athlete_id, nation, birthdate, category, bweight, group,
       # rank_s, snatch1, snatch2, snatch3,
       # rank_cj, jerk1, jerk2, jerk3,
       # rank, snatch, jerk, total
@@ -205,7 +205,7 @@ module IwfRuby
 
     def get_athlete_informations_from_event(athlete)
       # Get information about the athlete from the event
-      # name, athlete_id, nation, born, category, bweight, group
+      # name, athlete_id, nation, birthdate, category, bweight, group
     end
 
     def get_athlete_snatch_results_from_event(athlete)
@@ -226,3 +226,5 @@ module IwfRuby
 
   class Error < StandardError; end
 end
+
+binding.pry

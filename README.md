@@ -19,6 +19,7 @@
 - nation
 - athlete_url
 
+- category
 - bodyweight
 - group
 - snatch1, snatch2, snatch3, snatch
