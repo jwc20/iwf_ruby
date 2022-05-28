@@ -87,20 +87,20 @@ module IwfRuby
       Nokogiri::HTML(open("https://iwf.sport/results/results-by-events/results-by-events-old-bw/?event_year=#{year}"))
     end
 
-    def get_event_doc(url)
+    def get_doc(url)
       # Get document for a single event
       Nokogiri::HTML(open(url))
     end
 
     def get_all_men_athlete_names_from_event(url)
       # Get only the name of male athletes in the event
-      doc = get_event_doc(url)
+      doc = get_doc(url)
       doc.css('#men_total div div a div div.col-7.not__cell__767').text
     end
 
     def get_all_women_athlete_names_from_event(url)
       # Get only the name of female athletes in the event
-      doc = get_event_doc(url)
+      doc = get_doc(url)
       doc.css('#women_total div div a div div.col-7.not__cell__767').text
     end
 
@@ -108,7 +108,8 @@ module IwfRuby
     def make_results_men(url)
       # Get all athlete informations and results from the event
       # USING TOTALS
-      doc = get_event_doc(url)
+      doc = get_doc(url)
+      # name_of_event = doc.css("#page__container section div.filters div.container div div div h2").text
       cards = doc.css('#men_total div.card')
       # binding.pry
       cards.each do |card|
@@ -117,16 +118,16 @@ module IwfRuby
 
         # Need to check if node is not empty
         next unless athlete.name && athlete.name != ''
+
         athlete.nation = card.css('div div a div div.col-3.not__cell__767 p').text.delete!("\n")
         athlete.birthdate = card.css('div.col-5.not__cell__767 p')[0].children[2].text.delete!("\n")
-        athlete.athlete_url = card.css("div div a.col-md-5.title").attribute('href').value
-        
+        athlete.athlete_url = card.css('div div a.col-md-5.title').attribute('href').value.strip
+
         # category
-        # athlete.category =
 
         athlete.bweight = card.css('div.col-4.not__cell__767 p')[0].children[2].text.delete!("\n")
         athlete.group = card.css('div div div.col-md-4 div div.col-3.not__cell__767 p')[0].children[2].text.delete!("\n")
-        
+
         # snatch1
         # snatch2
         # snatch3
@@ -138,20 +139,18 @@ module IwfRuby
         athlete.snatch = card.css('div div div.col-md-3 div div:nth-child(1) p strong').children.text
         athlete.jerk = card.css('div div div.col-md-3 div div:nth-child(2) p strong').text
         athlete.total = card.css('div div div.col-md-3 div div:nth-child(3) p strong')[0].children[1].text
-        
+
         # rank_s
         # rank_cj
         athlete.rank = card.css('div.col-2.not__cell__767 p').text.delete!("\n")
-
       end
     end
-
 
     # def make_all_women_athlete_informations_and_results_from_event(url)
     def make_results_women(url)
       # Get all athlete informations and results from the event
       # USING TOTALS
-      doc = get_event_doc(url)
+      doc = get_doc(url)
       cards = doc.css('#women_total div.card')
       cards.each do |card|
         athlete = AthleteResult.new
@@ -173,7 +172,7 @@ module IwfRuby
 
     def print_male_athletes(url)
       # self.make_all_men_athlete_informations_and_results_from_event(url)
-      self.make_results_men(url)
+      make_results_men(url)
       AthleteResult.all.each do |athlete|
         next unless athlete.name && athlete.name != ''
 
@@ -194,7 +193,7 @@ module IwfRuby
 
     def print_female_athletes(url)
       # self.make_all_men_athlete_informations_and_results_from_event(url)
-      self.make_results_women(url)
+      make_results_women(url)
       AthleteResult.all.each do |athlete|
         next unless athlete.name && athlete.name != ''
 
@@ -223,7 +222,7 @@ module IwfRuby
       # rank_s, snatch1, snatch2, snatch3,
       # rank_cj, jerk1, jerk2, jerk3,
       # rank, snatch, jerk, total
-      # doc = get_event_doc(url)
+      # doc = get_doc(url)
     end
 
     def get_athlete_informations_from_event(athlete)
@@ -251,10 +250,10 @@ module IwfRuby
   class Error < StandardError; end
 end
 
-
-
-
 # IwfRuby::Scraper.new.make_results_men("https://iwf.sport/results/results-by-events/?event_id=529")
+IwfRuby::Scraper.new.print_male_athletes('https://iwf.sport/results/results-by-events/?event_id=529')
 
+# IwfRuby::Scraper.new.get_category_men("https://iwf.sport/weightlifting_/athletes-bios/?athlete=cholakyan-garnik-2002-12-21&id=16716", "2022 IWF Junior World Championships")
+# IwfRuby::Scraper.new.get_doc("https://iwf.sport/weightlifting_/athletes-bios/?athlete=cholakyan-garnik-2002-12-21&id=16716")
 
 # binding.pry
