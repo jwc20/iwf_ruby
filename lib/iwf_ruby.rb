@@ -51,10 +51,7 @@ module IwfRuby
 
         next unless event_name_formatted == event_name_searched_formatted
 
-        # puts event
-        # puts event_name_formatted
-        # puts event_name_searched_formatted
-        return event
+        return print_male_athletes(event.event_url)
       end
     end
 
