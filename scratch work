@@ -36,18 +36,24 @@ athlete.rank = result.css('div.col-2.not__cell__767 p').text.delete!("\n")
 
 
 
+athlete.snatch1 = result.css("")
 
 
 
 
 
+container.xpath('following-sibling::div').css('div#men_snatchjerk').text
 
 
+#men_snatchjerk div:nth-child(3) div:nth-child(2) div div div.col-md-3 div div:nth-child(1) p strong
+#men_snatchjerk div:nth-child(5) div:nth-child(2) div div div.col-md-3 div div:nth-child(1) p strong
+athlete.snatch1 = extended_result.css("div:nth-child(3) div:nth-child(2) div div div.col-md-3 div div:nth-child(1) p strong").text
+athlete.snatch2 = extended_result.css("div:nth-child(3) div:nth-child(2) div div div.col-md-3 div div:nth-child(2) p strong").text
+athlete.snatch3 = extended_result.css("div:nth-child(3) div:nth-child(2) div div div.col-md-3 div div:nth-child(3) p strong").text
 
-
-
-
-
+athlete.jerk1 = extended_result.css("div:nth-child(5) div:nth-child(2) div div div.col-md-3 div div:nth-child(1) p strong").text
+athlete.jerk2 = extended_result.css("div:nth-child(5) div:nth-child(2) div div div.col-md-3 div div:nth-child(2) p strong").text
+athlete.jerk3 = extended_result.css("div:nth-child(5) div:nth-child(2) div div div.col-md-3 div div:nth-child(3) p strong").text
 
 
 

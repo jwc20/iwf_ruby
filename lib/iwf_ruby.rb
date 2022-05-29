@@ -110,39 +110,48 @@ module IwfRuby
       # USING TOTALS
       doc = get_doc(url)
       # name_of_event = doc.css("#page__container section div.filters div.container div div div h2").text
-      cards = doc.css('#men_total div.card')
-      # binding.pry
-      cards.each do |card|
-        athlete = AthleteResult.new
-        athlete.name = card.css('div.col-7.not__cell__767 p').text.delete!("\n")
 
-        # Need to check if node is not empty
-        next unless athlete.name && athlete.name != ''
+      containers = doc.css('#men_total')
 
-        athlete.nation = card.css('div div a div div.col-3.not__cell__767 p').text.delete!("\n")
-        athlete.birthdate = card.css('div.col-5.not__cell__767 p')[0].children[2].text.delete!("\n")
-        athlete.athlete_url = card.css('div div a.col-md-5.title').attribute('href').value.strip
+      # extended_results = doc.css('div#men_snatchjerk')
 
-        # category
+      containers.each do |container|
+        categories = container.css('div.results__title')
+        # binding.pry
 
-        athlete.bweight = card.css('div.col-4.not__cell__767 p')[0].children[2].text.delete!("\n")
-        athlete.group = card.css('div div div.col-md-4 div div.col-3.not__cell__767 p')[0].children[2].text.delete!("\n")
+        categories.each do |cat|
+          results = cat.xpath('following-sibling::div')
+          # puts results.first.parent.xpath('following-sibling::div').css('div:nth-child(3) div:nth-child(2) div div div.col-md-3 div div:nth-child(2) p strong').text
 
-        # snatch1
-        # snatch2
-        # snatch3
+          results.css('div.card').each do |result|
+            athlete = AthleteResult.new
+            athlete.name = result.css('div.col-7.not__cell__767 p').text.delete!("\n")
 
-        # jerk1
-        # jerk2
-        # jerk3
+            next unless athlete.name && athlete.name != ''
 
-        athlete.snatch = card.css('div div div.col-md-3 div div:nth-child(1) p strong').children.text
-        athlete.jerk = card.css('div div div.col-md-3 div div:nth-child(2) p strong').text
-        athlete.total = card.css('div div div.col-md-3 div div:nth-child(3) p strong')[0].children[1].text
+            athlete.nation = result.css('div div a div div.col-3.not__cell__767 p').text.delete!("\n")
+            athlete.birthdate = result.css('div.col-5.not__cell__767 p')[0].children[2].text.delete!("\n")
+            athlete.athlete_url = result.css('div div a.col-md-5.title').attribute('href').value.strip
 
-        # rank_s
-        # rank_cj
-        athlete.rank = card.css('div.col-2.not__cell__767 p').text.delete!("\n")
+            athlete.category = cat.css('div div div h2').text
+            athlete.bweight = result.css('div.col-4.not__cell__767 p')[0].children[2].text.delete!("\n")
+            athlete.group = result.css('div div div.col-md-4 div div.col-3.not__cell__767 p')[0].children[2].text.delete!("\n")
+
+            athlete.snatch = result.css('div div div.col-md-3 div div:nth-child(1) p strong').children.text
+            athlete.jerk = result.css('div div div.col-md-3 div div:nth-child(2) p strong').text
+            athlete.total = result.css('div div div.col-md-3 div div:nth-child(3) p strong')[0].children[1].text
+
+            athlete.rank = result.css('div.col-2.not__cell__767 p').text.delete!("\n")
+
+            # TODO:
+              # snatch1
+              # snatch2
+              # snatch3
+              # jerk1
+              # jerk2
+              # jerk3
+          end
+        end
       end
     end
 
@@ -251,7 +260,7 @@ module IwfRuby
 end
 
 # IwfRuby::Scraper.new.make_results_men("https://iwf.sport/results/results-by-events/?event_id=529")
-IwfRuby::Scraper.new.print_male_athletes('https://iwf.sport/results/results-by-events/?event_id=529')
+# IwfRuby::Scraper.new.print_male_athletes('https://iwf.sport/results/results-by-events/?event_id=529')
 
 # IwfRuby::Scraper.new.get_category_men("https://iwf.sport/weightlifting_/athletes-bios/?athlete=cholakyan-garnik-2002-12-21&id=16716", "2022 IWF Junior World Championships")
 # IwfRuby::Scraper.new.get_doc("https://iwf.sport/weightlifting_/athletes-bios/?athlete=cholakyan-garnik-2002-12-21&id=16716")
