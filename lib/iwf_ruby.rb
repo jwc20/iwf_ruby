@@ -1,14 +1,15 @@
 # frozen_string_literal: true
 
 require_relative 'iwf_ruby/version'
-require_relative './athlete_result'
-require_relative './event'
 require 'nokogiri'
 require 'open-uri'
 require 'pry'
 
 module IwfRuby
   class Scraper
+    require_relative './athlete_result'
+    require_relative './event'
+
     def get_years_available
       # FIXME
       # Gets all years available in new bodyweight and old bodyweight events page
