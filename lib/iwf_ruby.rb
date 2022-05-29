@@ -139,7 +139,7 @@ module IwfRuby
             athlete = AthleteResult.new
             athlete.name = result.css('div.col-7.not__cell__767 p').text.delete!("\n")
 
-            next unless athlete.name && athlete.name != '' && athlete.name != nil
+            next unless athlete.name && athlete.name != ''
 
             athlete.nation = result.css('div div a div div.col-3.not__cell__767 p').text.delete!("\n")
             athlete.birthdate = result.css('div.col-5.not__cell__767 p')[0].children[2].text.delete!("\n")
@@ -272,7 +272,7 @@ module IwfRuby
 end
 
 # IwfRuby::Scraper.new.make_results_men("https://iwf.sport/results/results-by-events/?event_id=529")
-IwfRuby::Scraper.new.print_male_athletes('https://iwf.sport/results/results-by-events/?event_id=529')
+# IwfRuby::Scraper.new.print_male_athletes('https://iwf.sport/results/results-by-events/?event_id=529')
 
 # IwfRuby::Scraper.new.get_category_men("https://iwf.sport/weightlifting_/athletes-bios/?athlete=cholakyan-garnik-2002-12-21&id=16716", "2022 IWF Junior World Championships")
 # IwfRuby::Scraper.new.get_doc("https://iwf.sport/weightlifting_/athletes-bios/?athlete=cholakyan-garnik-2002-12-21&id=16716")
