@@ -127,7 +127,7 @@ module IwfRuby
             athlete = AthleteResult.new
             athlete.name = result.css('div.col-7.not__cell__767 p').text.delete!("\n")
 
-            next unless athlete.name && athlete.name != '' 
+            next unless athlete.name != '' && athlete.name.nil? == false
 
             athlete.nation = result.css('div div a div div.col-3.not__cell__767 p').text.delete!("\n")
             athlete.birthdate = result.css('div.col-5.not__cell__767 p')[0].children[2].text.delete!("\n")
@@ -183,7 +183,7 @@ module IwfRuby
       # self.make_all_men_athlete_informations_and_results_from_event(url)
       make_results_men(url)
       AthleteResult.all.each do |athlete|
-        next unless athlete.name && athlete.name != ''
+        next unless athlete.name != '' && athlete.name.nil? == false
 
         puts "Name: #{athlete.name}"
         puts "Nation: #{athlete.nation}"
