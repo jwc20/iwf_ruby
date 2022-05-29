@@ -13,15 +13,14 @@
 
 ## Scraped Data:
 
-### Athlete:
+### Athlete Result:
 
 - name
 - birthdate
 - nation
 - athlete_url
 
-### Event Unit Entry (Result entry for one athlete):
-
+- category
 - bodyweight
 - group
 - snatch1, snatch2, snatch3, snatch

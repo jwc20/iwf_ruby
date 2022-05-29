@@ -1,9 +1,11 @@
+# frozen_string_literal: true
+
 require 'nokogiri'
 require 'open-uri'
 require 'pry'
 
-require_relative './athlete'
-
+require_relative './athlete_result'
+# Class for Events
 class Event
   attr_accessor :name, :location, :date, :event_url
 
