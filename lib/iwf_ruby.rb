@@ -57,6 +57,7 @@ module IwfRuby
     end
 
     def print_events(year)
+      Event.reset_all
       make_events(year)
       Event.all.each do |event|
         next unless event.name && event.name != ''
