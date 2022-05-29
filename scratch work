@@ -33,7 +33,7 @@ athlete.rank = result.css('div.col-2.not__cell__767 p').text.delete!("\n")
 
 
 
-
+div div a div div.col-7.not__cell__767
 
 
 athlete.snatch1 = result.css("")
