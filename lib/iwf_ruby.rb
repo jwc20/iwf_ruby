@@ -43,6 +43,21 @@ module IwfRuby
       end
     end
 
+    def find_event(event_name_searched, year)
+      event_name_searched_formatted = event_name_searched.split(' ').join('-').downcase
+      events = print_events(year)
+      events.each do |event|
+        event_name_formatted = event.name.split(' ').join('-').downcase
+
+        next unless event_name_formatted == event_name_searched_formatted
+
+        # puts event
+        # puts event_name_formatted
+        # puts event_name_searched_formatted
+        return event
+      end
+    end
+
     def print_events(year)
       make_events(year)
       Event.all.each do |event|
@@ -144,12 +159,12 @@ module IwfRuby
             athlete.rank = result.css('div.col-2.not__cell__767 p').text.delete!("\n")
 
             # TODO:
-              # snatch1
-              # snatch2
-              # snatch3
-              # jerk1
-              # jerk2
-              # jerk3
+            # snatch1
+            # snatch2
+            # snatch3
+            # jerk1
+            # jerk2
+            # jerk3
           end
         end
       end
@@ -264,5 +279,9 @@ end
 
 # IwfRuby::Scraper.new.get_category_men("https://iwf.sport/weightlifting_/athletes-bios/?athlete=cholakyan-garnik-2002-12-21&id=16716", "2022 IWF Junior World Championships")
 # IwfRuby::Scraper.new.get_doc("https://iwf.sport/weightlifting_/athletes-bios/?athlete=cholakyan-garnik-2002-12-21&id=16716")
+
+# IwfRuby::Scraper.new.find_event('2022 IWF Junior World Championships', 2022)
+
+# IwfRuby::Scraper.new.find_event('XXXII OLYMPIC GAMES', 2021)
 
 # binding.pry
