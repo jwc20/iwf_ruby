@@ -45,13 +45,12 @@ module IwfRuby
     end
 
     def find_event(event_name_searched, year)
+      # Event.reset_all
       event_name_searched_formatted = event_name_searched.split(' ').join('-').downcase
       events = print_events(year)
       events.each do |event|
         event_name_formatted = event.name.split(' ').join('-').downcase
-
         next unless event_name_formatted == event_name_searched_formatted
-
         return print_male_athletes(event.event_url)
       end
     end
@@ -62,10 +61,10 @@ module IwfRuby
       Event.all.each do |event|
         next unless event.name && event.name != ''
 
-        puts "Name: #{event.name}"
-        puts "Location: #{event.location}"
-        puts "Date: #{event.date}"
-        puts "Event url: #{event.event_url}"
+        # puts "Name: #{event.name}"
+        # puts "Location: #{event.location}"
+        # puts "Date: #{event.date}"
+        # puts "Event url: #{event.event_url}"
       end
     end
 
@@ -195,21 +194,23 @@ module IwfRuby
 
     def print_male_athletes(url)
       # self.make_all_men_athlete_informations_and_results_from_event(url)
+      AthleteResult.reset_all
       make_results_men(url)
+      # puts AthleteResult.all.count
       AthleteResult.all.each do |athlete|
         next unless athlete.name && athlete.name != ''
 
-        puts "Name: #{athlete.name}"
-        puts "Nation: #{athlete.nation}"
-        puts "Birthdate: #{athlete.birthdate}"
-        puts "URL:  #{athlete.athlete_url}"
-        puts "Category: #{athlete.category}"
-        puts "Body weight: #{athlete.bweight}"
-        puts "Group: #{athlete.group}"
-        puts "Snatch: #{athlete.snatch}"
-        puts "Clean and Jerk: #{athlete.jerk}"
-        puts "Total: #{athlete.total}"
-        puts "Rank: #{athlete.rank}"
+        # puts "Name: #{athlete.name}"
+        # puts "Nation: #{athlete.nation}"
+        # puts "Birthdate: #{athlete.birthdate}"
+        # puts "URL:  #{athlete.athlete_url}"
+        # puts "Category: #{athlete.category}"
+        # puts "Body weight: #{athlete.bweight}"
+        # puts "Group: #{athlete.group}"
+        # puts "Snatch: #{athlete.snatch}"
+        # puts "Clean and Jerk: #{athlete.jerk}"
+        # puts "Total: #{athlete.total}"
+        # puts "Rank: #{athlete.rank}"
       end
     end
 
@@ -280,6 +281,6 @@ end
 
 # IwfRuby::Scraper.new.find_event('2022 IWF Junior World Championships', 2022)
 
-# IwfRuby::Scraper.new.find_event('XXXII OLYMPIC GAMES', 2021)
+IwfRuby::Scraper.new.find_event('XXXII OLYMPIC GAMES', 2021)
 
 # binding.pry
