@@ -279,7 +279,7 @@ end
 # IwfRuby::Scraper.new.get_category_men("https://iwf.sport/weightlifting_/athletes-bios/?athlete=cholakyan-garnik-2002-12-21&id=16716", "2022 IWF Junior World Championships")
 # IwfRuby::Scraper.new.get_doc("https://iwf.sport/weightlifting_/athletes-bios/?athlete=cholakyan-garnik-2002-12-21&id=16716")
 
-IwfRuby::Scraper.new.find_event_result_men('2022 IWF Junior World Championships', 2022)
+# IwfRuby::Scraper.new.find_event_result_men('2022 IWF Junior World Championships', 2022)
 
 # IwfRuby::Scraper.new.find_event('XXXII OLYMPIC GAMES', 2021)
 
