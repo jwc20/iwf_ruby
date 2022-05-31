@@ -44,7 +44,7 @@ module IwfRuby
           end
         end
       end
-      puts countries.group_by { |e| e }.map { |k, v| [k, v.length] }.to_h
+      return countries.group_by { |e| e }.map { |k, v| [k, v.length] }.to_h
     end
 
     def make_events(year)
