@@ -140,6 +140,7 @@ module IwfRuby
             athlete = AthleteResult.new
             athlete.name = result.css('div div a div div.col-7.not__cell__767 p').text.delete!("\n")
 
+          
             next unless athlete.name && athlete.name != ''
 
             athlete.nation = result.css('div div a div div.col-3.not__cell__767 p').text.delete!("\n")
@@ -150,11 +151,13 @@ module IwfRuby
             athlete.bweight = result.css('div.col-4.not__cell__767 p')[0].children[2].text.delete!("\n")
             athlete.group = result.css('div div div.col-md-4 div div.col-3.not__cell__767 p')[0].children[2].text.delete!("\n")
 
-            athlete.snatch = result.css('div div div.col-md-3 div div:nth-child(1) p strong').children.text
-            athlete.jerk = result.css('div div div.col-md-3 div div:nth-child(2) p strong').text
-            athlete.total = result.css('div div div.col-md-3 div div:nth-child(3) p strong')[0].children[1].text
+            athlete.snatch = result.css('div div div.col-md-3 div div:nth-child(1) p strong').children.text.gsub("---", "0").to_i
+            athlete.jerk = result.css('div div div.col-md-3 div div:nth-child(2) p strong').text.gsub("---", "0").to_i
+            athlete.total = result.css('div div div.col-md-3 div div:nth-child(3) p strong')[0].children[1].text.gsub("---", "0").to_i
 
-            athlete.rank = result.css('div.col-2.not__cell__767 p').text.delete!("\n")
+            # athlete.rank = result.css('div.col-2.not__cell__767 p').text.delete!("\n")
+            athlete.rank = result.css('div.col-2.not__cell__767 p').children[2].text.delete("\n").gsub("---", "0").to_i
+
 
             # TODO:
             # snatch1
@@ -197,20 +200,21 @@ module IwfRuby
       AthleteResult.reset_all
       make_results_men(url)
       # puts AthleteResult.all.count
+      
       AthleteResult.all.each do |athlete|
         next unless athlete.name && athlete.name != ''
 
-        # puts "Name: #{athlete.name}"
-        # puts "Nation: #{athlete.nation}"
-        # puts "Birthdate: #{athlete.birthdate}"
-        # puts "URL:  #{athlete.athlete_url}"
-        # puts "Category: #{athlete.category}"
-        # puts "Body weight: #{athlete.bweight}"
-        # puts "Group: #{athlete.group}"
-        # puts "Snatch: #{athlete.snatch}"
-        # puts "Clean and Jerk: #{athlete.jerk}"
-        # puts "Total: #{athlete.total}"
-        # puts "Rank: #{athlete.rank}"
+        puts "Name: #{athlete.name}"
+        puts "Nation: #{athlete.nation}"
+        puts "Birthdate: #{athlete.birthdate}"
+        puts "URL:  #{athlete.athlete_url}"
+        puts "Category: #{athlete.category}"
+        puts "Body weight: #{athlete.bweight}"
+        puts "Group: #{athlete.group}"
+        puts "Snatch: #{athlete.snatch}"
+        puts "Clean and Jerk: #{athlete.jerk}"
+        puts "Total: #{athlete.total}"
+        puts "Rank: #{athlete.rank}"
       end
     end
 
@@ -279,8 +283,8 @@ end
 # IwfRuby::Scraper.new.get_category_men("https://iwf.sport/weightlifting_/athletes-bios/?athlete=cholakyan-garnik-2002-12-21&id=16716", "2022 IWF Junior World Championships")
 # IwfRuby::Scraper.new.get_doc("https://iwf.sport/weightlifting_/athletes-bios/?athlete=cholakyan-garnik-2002-12-21&id=16716")
 
-# IwfRuby::Scraper.new.find_event('2022 IWF Junior World Championships', 2022)
+IwfRuby::Scraper.new.find_event('2022 IWF Junior World Championships', 2022)
 
-IwfRuby::Scraper.new.find_event('XXXII OLYMPIC GAMES', 2021)
+# IwfRuby::Scraper.new.find_event('XXXII OLYMPIC GAMES', 2021)
 
 # binding.pry
