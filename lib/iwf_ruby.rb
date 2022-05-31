@@ -26,6 +26,27 @@ module IwfRuby
       years
     end
 
+    def get_participant_countries(event_url)
+      countries = []
+      doc = get_doc(event_url)
+
+      containers = [doc.css('#men_total'), doc.css('#women_total')]
+      containers.each do |container|
+        categories = container.css('div.results__title')
+        categories.each do |category|
+          results = category.xpath('following-sibling::div')
+          results.css('div.card').each do |result|
+            athlete = AthleteResult.new
+            athlete.name = result.css('div div a div div.col-7.not__cell__767 p').text.delete!("\n")
+            next unless athlete.name && athlete.name != ''
+
+            countries.push(result.css('div div a div div.col-3.not__cell__767 p').text.delete!("\n"))
+          end
+        end
+      end
+      puts countries.group_by { |e| e }.map { |k, v| [k, v.length] }.to_h
+    end
+
     def make_events(year)
       get_events_page(year).css('#section-scroll div div.cards a').each do |post|
         event = Event.new
@@ -264,5 +285,6 @@ module IwfRuby
   class Error < StandardError; end
 end
 
-# IwfRuby::Scraper.new.find_event_result_men('2022 IWF Junior World Championships', 2022)
+IwfRuby::Scraper.new.get_participant_countries('https://iwf.sport/results/results-by-events/?event_id=527')
+# find_event_result_men('2022 IWF Junior World Championships', 2022)
 # IwfRuby::Scraper.new.find_event_result_women('XXXII OLYMPIC GAMES', 2021)
