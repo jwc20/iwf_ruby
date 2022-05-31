@@ -30,21 +30,31 @@ module IwfRuby
       countries = []
       doc = get_doc(event_url)
 
-      containers = [doc.css('#men_total'), doc.css('#women_total')]
+      # containers = [doc.css('#men_total'), doc.css('#women_total')]
+      containers = [doc.css('#women_total')]
       containers.each do |container|
         categories = container.css('div.results__title')
         categories.each do |category|
           results = category.xpath('following-sibling::div')
           results.css('div.card').each do |result|
+            # binding.pry
+
             athlete = AthleteResult.new
             athlete.name = result.css('div div a div div.col-7.not__cell__767 p').text.delete!("\n")
             next unless athlete.name && athlete.name != ''
 
-            countries.push(result.css('div div a div div.col-3.not__cell__767 p').text.delete!("\n"))
+            countries.push(result.css('div div a div div.col-3.not__cell__767 p').text.delete!("\n").lstrip)
           end
         end
       end
-      return countries.group_by { |e| e }.map { |k, v| [k, v.length] }.to_h
+      # .reduce(Hash.new(0)) { |a, b| a[b] += 1; a }
+
+      # puts countries.group_by { |e| e }.map { |k, v| [k, v.length] }.to_h
+      # puts countries.each_with_object(Hash.new(0)) { |b, a|
+      #        a[b] += 1
+      #      }
+
+      puts Hash[countries.group_by { |x| x }.map { |k, v| [k, v.count] }]
     end
 
     def make_events(year)
