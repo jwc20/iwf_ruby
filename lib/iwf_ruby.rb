@@ -17,7 +17,7 @@ module IwfRuby
       urls = ['https://iwf.sport/results/results-by-events/', 'https://iwf.sport/results/results-by-events/results-by-events-old-bw/']
 
       urls.each do |url|
-        events_page = Nokogiri::HTML(open(url))
+        events_page = Nokogiri::HTML(URI.open(url))
         events_page.css('.results_by_events select').first.css('option').each do |year|
           # puts year.text
           years.push(year.text) unless years.include?(year.text)
@@ -44,16 +44,36 @@ module IwfRuby
       end
     end
 
-    def find_event(event_name_searched, year)
+    def find_event_result_men(event_name_searched, year)
       # Event.reset_all
       event_name_searched_formatted = event_name_searched.split(' ').join('-').downcase
       events = print_events(year)
       events.each do |event|
         event_name_formatted = event.name.split(' ').join('-').downcase
         next unless event_name_formatted == event_name_searched_formatted
+
         return print_male_athletes(event.event_url)
       end
     end
+
+
+
+    def find_event_result_women(event_name_searched, year)
+      # Event.reset_all
+      event_name_searched_formatted = event_name_searched.split(' ').join('-').downcase
+      events = print_events(year)
+      events.each do |event|
+        event_name_formatted = event.name.split(' ').join('-').downcase
+        next unless event_name_formatted == event_name_searched_formatted
+
+        return print_female_athletes(event.event_url)
+      end
+    end
+
+
+
+
+
 
     def print_events(year)
       Event.reset_all
@@ -87,22 +107,22 @@ module IwfRuby
 
     def get_2018_events
       # FIXME:
-      old_bw = Nokogiri::HTML(open('https://iwf.sport/results/results-by-events/results-by-events-old-bw/?event_year=2018')).search('#section-scroll div.results')
-      new_bw = Nokogiri::HTML(open('https://iwf.sport/results/results-by-events/?event_year=2018'))
+      old_bw = Nokogiri::HTML(URI.open('https://iwf.sport/results/results-by-events/results-by-events-old-bw/?event_year=2018')).search('#section-scroll div.results')
+      new_bw = Nokogiri::HTML(URI.open('https://iwf.sport/results/results-by-events/?event_year=2018'))
       new_bw.at('#section-scroll div.results').add_child(old_bw)
     end
 
     def get_new_bodyweight_events(year)
-      Nokogiri::HTML(open("https://iwf.sport/results/results-by-events/?event_year=#{year}"))
+      Nokogiri::HTML(URI.open("https://iwf.sport/results/results-by-events/?event_year=#{year}"))
     end
 
     def get_old_bodyweight_events(year)
-      Nokogiri::HTML(open("https://iwf.sport/results/results-by-events/results-by-events-old-bw/?event_year=#{year}"))
+      Nokogiri::HTML(URI.open("https://iwf.sport/results/results-by-events/results-by-events-old-bw/?event_year=#{year}"))
     end
 
     def get_doc(url)
       # Get document for a single event
-      Nokogiri::HTML(open(url))
+      Nokogiri::HTML(URI.open(url))
     end
 
     def get_all_men_athlete_names_from_event(url)
@@ -117,90 +137,63 @@ module IwfRuby
       doc.css('#women_total div div a div div.col-7.not__cell__767').text
     end
 
-    # def make_all_men_athlete_informations_and_results_from_event(url)
+    # TODO:
+    # snatch1
+    # snatch2
+    # snatch3
+    # jerk1
+    # jerk2
+    # jerk3
+
     def make_results_men(url)
       # Get all athlete informations and results from the event
-      # USING TOTALS
       doc = get_doc(url)
-      # name_of_event = doc.css("#page__container section div.filters div.container div div div h2").text
-
       containers = doc.css('#men_total')
+      scrape_results(containers)
+    end
 
-      # extended_results = doc.css('div#men_snatchjerk')
+    def make_results_women(url)
+      # Get all athlete informations and results from the event
+      doc = get_doc(url)
+      containers = doc.css('#women_total')
+      scrape_results(containers)
+    end
 
+
+    def scrape_results(containers)
       containers.each do |container|
         categories = container.css('div.results__title')
-        # binding.pry
-
         categories.each do |cat|
           results = cat.xpath('following-sibling::div')
-          # puts results.first.parent.xpath('following-sibling::div').css('div:nth-child(3) div:nth-child(2) div div div.col-md-3 div div:nth-child(2) p strong').text
-
           results.css('div.card').each do |result|
             athlete = AthleteResult.new
             athlete.name = result.css('div div a div div.col-7.not__cell__767 p').text.delete!("\n")
-
-          
             next unless athlete.name && athlete.name != ''
 
             athlete.nation = result.css('div div a div div.col-3.not__cell__767 p').text.delete!("\n")
             athlete.birthdate = result.css('div.col-5.not__cell__767 p')[0].children[2].text.delete!("\n")
             athlete.athlete_url = result.css('div div a.col-md-5.title').attribute('href').value.strip
-
-            athlete.category = cat.css('div div div h2').text
+            athlete.category = cat.css('div div div h2').text.gsub(/[^\d]/, '')
             athlete.bweight = result.css('div.col-4.not__cell__767 p')[0].children[2].text.delete!("\n")
             athlete.group = result.css('div div div.col-md-4 div div.col-3.not__cell__767 p')[0].children[2].text.delete!("\n")
-
-            athlete.snatch = result.css('div div div.col-md-3 div div:nth-child(1) p strong').children.text.gsub("---", "0").to_i
-            athlete.jerk = result.css('div div div.col-md-3 div div:nth-child(2) p strong').text.gsub("---", "0").to_i
-            athlete.total = result.css('div div div.col-md-3 div div:nth-child(3) p strong')[0].children[1].text.gsub("---", "0").to_i
-
-            # athlete.rank = result.css('div.col-2.not__cell__767 p').text.delete!("\n")
-            athlete.rank = result.css('div.col-2.not__cell__767 p').children[2].text.delete("\n").gsub("---", "0").to_i
-
-
-            # TODO:
-            # snatch1
-            # snatch2
-            # snatch3
-            # jerk1
-            # jerk2
-            # jerk3
+            athlete.snatch = result.css('div div div.col-md-3 div div:nth-child(1) p strong').children.text.gsub('---',
+                                                                                                                 '0').to_i
+            athlete.jerk = result.css('div div div.col-md-3 div div:nth-child(2) p strong').text.gsub('---', '0').to_i
+            athlete.total = result.css('div div div.col-md-3 div div:nth-child(3) p strong')[0].children[1].text.gsub(
+              '---', '0'
+            ).to_i
+            athlete.rank = result.css('div.col-2.not__cell__767 p').children[2].text.delete("\n").gsub('---', '0').to_i
           end
         end
       end
     end
 
-    # def make_all_women_athlete_informations_and_results_from_event(url)
-    def make_results_women(url)
-      # Get all athlete informations and results from the event
-      # USING TOTALS
-      doc = get_doc(url)
-      cards = doc.css('#women_total div.card')
-      cards.each do |card|
-        athlete = AthleteResult.new
-        athlete.name = card.css('div.col-7.not__cell__767 p').text.delete!("\n")
-
-        # Need to check if node is not empty
-        next unless athlete.name && athlete.name != ''
-
-        athlete.rank = card.css('div.col-2.not__cell__767 p').text.delete!("\n")
-        athlete.nation = card.css('div div a div div.col-3.not__cell__767 p').text.delete!("\n")
-        athlete.birthdate = card.css('div.col-5.not__cell__767 p')[0].children[2].text.delete!("\n")
-        athlete.bweight = card.css('div.col-4.not__cell__767 p')[0].children[2].text.delete!("\n")
-        athlete.group = card.css('div div div.col-md-4 div div.col-3.not__cell__767 p')[0].children[2].text.delete!("\n")
-        athlete.snatch = card.css('div div div.col-md-3 div div:nth-child(1) p strong').children.text
-        athlete.jerk = card.css('div div div.col-md-3 div div:nth-child(2) p strong').text
-        athlete.total = card.css('div div div.col-md-3 div div:nth-child(3) p strong')[0].children[1].text
-      end
-    end
 
     def print_male_athletes(url)
       # self.make_all_men_athlete_informations_and_results_from_event(url)
       AthleteResult.reset_all
       make_results_men(url)
-      # puts AthleteResult.all.count
-      
+
       AthleteResult.all.each do |athlete|
         next unless athlete.name && athlete.name != ''
 
@@ -220,20 +213,23 @@ module IwfRuby
 
     def print_female_athletes(url)
       # self.make_all_men_athlete_informations_and_results_from_event(url)
+      AthleteResult.reset_all
       make_results_women(url)
+
       AthleteResult.all.each do |athlete|
         next unless athlete.name && athlete.name != ''
 
         puts "Name: #{athlete.name}"
-        puts "Rank: #{athlete.rank}"
         puts "Nation: #{athlete.nation}"
-        puts "Born: #{athlete.birthdate}"
+        puts "Birthdate: #{athlete.birthdate}"
+        puts "URL:  #{athlete.athlete_url}"
+        puts "Category: #{athlete.category}"
         puts "Body weight: #{athlete.bweight}"
         puts "Group: #{athlete.group}"
         puts "Snatch: #{athlete.snatch}"
         puts "Clean and Jerk: #{athlete.jerk}"
         puts "Total: #{athlete.total}"
-        puts ''
+        puts "Rank: #{athlete.rank}"
       end
     end
 
@@ -283,7 +279,7 @@ end
 # IwfRuby::Scraper.new.get_category_men("https://iwf.sport/weightlifting_/athletes-bios/?athlete=cholakyan-garnik-2002-12-21&id=16716", "2022 IWF Junior World Championships")
 # IwfRuby::Scraper.new.get_doc("https://iwf.sport/weightlifting_/athletes-bios/?athlete=cholakyan-garnik-2002-12-21&id=16716")
 
-IwfRuby::Scraper.new.find_event('2022 IWF Junior World Championships', 2022)
+IwfRuby::Scraper.new.find_event_result_men('2022 IWF Junior World Championships', 2022)
 
 # IwfRuby::Scraper.new.find_event('XXXII OLYMPIC GAMES', 2021)
 
