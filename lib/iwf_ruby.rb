@@ -26,36 +26,36 @@ module IwfRuby
       years
     end
 
-    def get_participant_countries(event_url)
-      countries = []
-      doc = get_doc(event_url)
+    # def get_participant_countries(event_url)
+    #   countries = []
+    #   doc = get_doc(event_url)
 
-      # containers = [doc.css('#men_total'), doc.css('#women_total')]
-      containers = [doc.css('#women_total')]
-      containers.each do |container|
-        categories = container.css('div.results__title')
-        categories.each do |category|
-          results = category.xpath('following-sibling::div')
-          results.css('div.card').each do |result|
-            # binding.pry
+    #   # containers = [doc.css('#men_total'), doc.css('#women_total')]
+    #   containers = [doc.css('#women_total')]
+    #   containers.each do |container|
+    #     categories = container.css('div.results__title')
+    #     categories.each do |category|
+    #       results = category.xpath('following-sibling::div')
+    #       results.css('div.card').each do |result|
+    #         # binding.pry
 
-            athlete = AthleteResult.new
-            athlete.name = result.css('div div a div div.col-7.not__cell__767 p').text.delete!("\n")
-            next unless athlete.name && athlete.name != ''
+    #         athlete = AthleteResult.new
+    #         athlete.name = result.css('div div a div div.col-7.not__cell__767 p').text.delete!("\n")
+    #         next unless athlete.name && athlete.name != ''
 
-            countries.push(result.css('div div a div div.col-3.not__cell__767 p').text.delete!("\n").lstrip)
-          end
-        end
-      end
-      # .reduce(Hash.new(0)) { |a, b| a[b] += 1; a }
+    #         countries.push(result.css('div div a div div.col-3.not__cell__767 p').text.delete!("\n").lstrip)
+    #       end
+    #     end
+    #   end
+    #   # .reduce(Hash.new(0)) { |a, b| a[b] += 1; a }
 
-      # puts countries.group_by { |e| e }.map { |k, v| [k, v.length] }.to_h
-      # puts countries.each_with_object(Hash.new(0)) { |b, a|
-      #        a[b] += 1
-      #      }
+    #   # puts countries.group_by { |e| e }.map { |k, v| [k, v.length] }.to_h
+    #   # puts countries.each_with_object(Hash.new(0)) { |b, a|
+    #   #        a[b] += 1
+    #   #      }
 
-      puts Hash[countries.group_by { |x| x }.map { |k, v| [k, v.count] }]
-    end
+    #   puts Hash[countries.group_by { |x| x }.map { |k, v| [k, v.count] }]
+    # end
 
     def make_events(year)
       get_events_page(year).css('#section-scroll div div.cards a').each do |post|
@@ -184,12 +184,14 @@ module IwfRuby
     end
 
     def scrape_results(containers)
+      count = 0
+      # category_loop = true
       containers.each do |container|
-        categories = container.css('div.results__title')
+        categories = container.css('div.results__title').xpath('following-sibling::div')
         categories.each do |cat|
-          results = cat.xpath('following-sibling::div')
-          results.css('div.card').each do |result|
+          cat.css('div.card').each do |result|
             athlete = AthleteResult.new
+
             athlete.name = result.css('div div a div div.col-7.not__cell__767 p').text.delete!("\n")
             next unless athlete.name && athlete.name != ''
 
@@ -206,10 +208,68 @@ module IwfRuby
               '---', '0'
             ).to_i
             athlete.rank = result.css('div.col-2.not__cell__767 p').children[2].text.delete("\n").gsub('---', '0').to_i
+            # count += 1
+            # puts result
+            # puts athlete
+            puts athlete.name
           end
         end
       end
+
+      # puts count
+      # AthleteResult.all.each do |athlete|
+      #   puts "Name: #{athlete.name}"
+      # end
     end
+
+    # def scrape_results(containers)
+    #   count = 0
+    #   # category_loop = true
+    #   containers.each do |container|
+    #     categories = container.css('div.results__title')
+    #     categories.each do |cat|
+
+    #       binding.pry
+    #       results = cat.xpath('following-sibling::div')
+    #       # binding.pry
+    #       # binding
+
+    #       results.css('div.card').each do |result|
+    #         athlete = AthleteResult.new
+
+    #         athlete.name = result.css('div div a div div.col-7.not__cell__767 p').text.delete!("\n")
+    #         next unless athlete.name && athlete.name != ''
+
+    #         athlete.nation = result.css('div div a div div.col-3.not__cell__767 p').text.delete!("\n")
+    #         athlete.birthdate = result.css('div.col-5.not__cell__767 p')[0].children[2].text.delete!("\n")
+    #         athlete.athlete_url = result.css('div div a.col-md-5.title').attribute('href').value.strip
+    #         athlete.category = cat.css('div div div h2').text.gsub(/[^\d]/, '').to_i
+    #         athlete.bweight = result.css('div.col-4.not__cell__767 p')[0].children[2].text.delete!("\n")
+    #         athlete.group = result.css('div div div.col-md-4 div div.col-3.not__cell__767 p')[0].children[2].text.delete!("\n")
+    #         athlete.snatch = result.css('div div div.col-md-3 div div:nth-child(1) p strong').children.text.gsub('---',
+    #                                                                                                              '0').to_i
+    #         athlete.jerk = result.css('div div div.col-md-3 div div:nth-child(2) p strong').text.gsub('---', '0').to_i
+    #         athlete.total = result.css('div div div.col-md-3 div div:nth-child(3) p strong')[0].children[1].text.gsub(
+    #           '---', '0'
+    #         ).to_i
+    #         athlete.rank = result.css('div.col-2.not__cell__767 p').children[2].text.delete("\n").gsub('---', '0').to_i
+    #         # count += 1
+    #         # puts result
+    #         # puts athlete
+    #         puts athlete.name
+    #       end
+    #       count += 1
+    #       # category_loop = false
+    #       puts 'END'
+    #       puts count
+    #     end
+    #   end
+
+    #   puts count
+    #   # AthleteResult.all.each do |athlete|
+    #   #   puts "Name: #{athlete.name}"
+    #   # end
+    # end
 
     def print_male_athletes(url)
       # self.make_all_men_athlete_informations_and_results_from_event(url)
@@ -295,6 +355,8 @@ module IwfRuby
   class Error < StandardError; end
 end
 
-IwfRuby::Scraper.new.get_participant_countries('https://iwf.sport/results/results-by-events/?event_id=527')
+# IwfRuby::Scraper.new.get_participant_countries('https://iwf.sport/results/results-by-events/?event_id=527')
 # find_event_result_men('2022 IWF Junior World Championships', 2022)
-# IwfRuby::Scraper.new.find_event_result_women('XXXII OLYMPIC GAMES', 2021)
+IwfRuby::Scraper.new.find_event_result_women("2012 IWF GRAND PRIX - PRESIDENT'S CUP", 2012)
+
+# https://iwf.sport/results/results-by-events/results-by-events-old-bw/?event_id=216
