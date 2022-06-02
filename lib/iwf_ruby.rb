@@ -364,7 +364,7 @@ end
 
 # IwfRuby::Scraper.new.get_participant_countries('https://iwf.sport/results/results-by-events/?event_id=527')
 # find_event_result_men('2022 IWF Junior World Championships', 2022)
-IwfRuby::Scraper.new.find_event_result_women("2012 IWF GRAND PRIX - PRESIDENT'S CUP", 2012)
+# IwfRuby::Scraper.new.find_event_result_women("2012 IWF GRAND PRIX - PRESIDENT'S CUP", 2012)
 
 # https://iwf.sport/results/results-by-events/results-by-events-old-bw/?event_id=216
 
