@@ -1,35 +1,53 @@
-# Development Branch
+# iwf_ruby Beta
 
-## TODO:
+A ruby library to scrape from the IWF (Internation Weightlifting Federation) website
 
-- [ ] Fix get_2018_events method
+## Scraped Data:
 
-# IwfRuby
+### Athlete Result:
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/iwf_ruby`. To experiment with that code, run `bin/console` for an interactive prompt.
+- name
+- birthdate
+- nation
+- athlete_url
+- category
+- bodyweight
+- group
+- snatch
+- jerk
+- total
+- rank
 
-TODO: Delete this and the text above, and describe your gem
+### Event:
+
+- name
+- location
+- date
+- event_url
+
+### Tools:
+
+open-uri, nokogiri
 
 ## Installation
 
-Install the gem and add to the application's Gemfile by executing:
+To install the gem, add to the application's Gemfile:
 
-    $ bundle add iwf_ruby
+```
+gem 'iwf_ruby', git: 'https://github.com/jwc20/iwf_ruby', ref: 'development'
 
-If bundler is not being used to manage dependencies, install the gem by executing:
+```
 
-    $ gem install iwf_ruby
+#### Note:
 
-## Usage
+This client is used alongside the frontend:
 
-TODO: Write usage instructions here
+```
+https://github.com/jwc20/twler-frontend-new
+```
 
-## Development
+and the backend:
 
-After checking out the repo, run `bin/setup` to install dependencies. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
-
-To install this gem onto your local machine, run `bundle exec rake install`. To release a new version, update the version number in `version.rb`, and then run `bundle exec rake release`, which will create a git tag for the version, push git commits and the created tag, and push the `.gem` file to [rubygems.org](https://rubygems.org).
-
-## Contributing
-
-Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/iwf_ruby.
+```
+https://github.com/jwc20/twler-backend
+```
