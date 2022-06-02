@@ -4,6 +4,7 @@ require_relative 'iwf_ruby/version'
 require 'nokogiri'
 require 'open-uri'
 require 'pry'
+require 'set'
 
 module IwfRuby
   class Scraper
@@ -183,13 +184,56 @@ module IwfRuby
       scrape_results(containers)
     end
 
+    # def scrape_results(containers)
+    #   count = 0
+    #   # category_loop = true
+    #   containers.each do |container|
+    #     categories = container.css('div.results__title').xpath('following-sibling::div')
+    #     categories.each do |cat|
+    #       cat.css('div.card').each do |result|
+    #         athlete = AthleteResult.new
+
+    #         athlete.name = result.css('div div a div div.col-7.not__cell__767 p').text.delete!("\n")
+    #         next unless athlete.name && athlete.name != ''
+
+    #         athlete.nation = result.css('div div a div div.col-3.not__cell__767 p').text.delete!("\n")
+    #         athlete.birthdate = result.css('div.col-5.not__cell__767 p')[0].children[2].text.delete!("\n")
+    #         athlete.athlete_url = result.css('div div a.col-md-5.title').attribute('href').value.strip
+    #         athlete.category = cat.css('div div div h2').text.gsub(/[^\d]/, '').to_i
+    #         athlete.bweight = result.css('div.col-4.not__cell__767 p')[0].children[2].text.delete!("\n")
+    #         athlete.group = result.css('div div div.col-md-4 div div.col-3.not__cell__767 p')[0].children[2].text.delete!("\n")
+    #         athlete.snatch = result.css('div div div.col-md-3 div div:nth-child(1) p strong').children.text.gsub('---',
+    #                                                                                                              '0').to_i
+    #         athlete.jerk = result.css('div div div.col-md-3 div div:nth-child(2) p strong').text.gsub('---', '0').to_i
+    #         athlete.total = result.css('div div div.col-md-3 div div:nth-child(3) p strong')[0].children[1].text.gsub(
+    #           '---', '0'
+    #         ).to_i
+    #         athlete.rank = result.css('div.col-2.not__cell__767 p').children[2].text.delete("\n").gsub('---', '0').to_i
+    #         count += 1
+    #         # puts result
+    #         # puts athlete
+    #         puts athlete.name
+    #       end
+    #     end
+    #   end
+    #   puts count
+    # end
+
+    ##########################################################################################
     def scrape_results(containers)
-      count = 0
+      # count = 0
       # category_loop = true
       containers.each do |container|
-        categories = container.css('div.results__title').xpath('following-sibling::div')
+        categories = container.css('div.results__title')
         categories.each do |cat|
-          cat.css('div.card').each do |result|
+          # binding.pry
+          results = cat.xpath('following-sibling::div')
+          # binding.pry
+          # binding
+
+          result_array = []
+
+          results.css('div.card').each do |result|
             athlete = AthleteResult.new
 
             athlete.name = result.css('div div a div div.col-7.not__cell__767 p').text.delete!("\n")
@@ -211,8 +255,16 @@ module IwfRuby
             # count += 1
             # puts result
             # puts athlete
-            # puts athlete.name
+            puts athlete.name
+            # count += 1
+
+            result_array.push(athlete)
           end
+
+          # category_loop = false
+          # puts 'END'
+          # puts count
+          return result_array
         end
       end
 
@@ -222,54 +274,7 @@ module IwfRuby
       # end
     end
 
-    # def scrape_results(containers)
-    #   count = 0
-    #   # category_loop = true
-    #   containers.each do |container|
-    #     categories = container.css('div.results__title')
-    #     categories.each do |cat|
-
-    #       binding.pry
-    #       results = cat.xpath('following-sibling::div')
-    #       # binding.pry
-    #       # binding
-
-    #       results.css('div.card').each do |result|
-    #         athlete = AthleteResult.new
-
-    #         athlete.name = result.css('div div a div div.col-7.not__cell__767 p').text.delete!("\n")
-    #         next unless athlete.name && athlete.name != ''
-
-    #         athlete.nation = result.css('div div a div div.col-3.not__cell__767 p').text.delete!("\n")
-    #         athlete.birthdate = result.css('div.col-5.not__cell__767 p')[0].children[2].text.delete!("\n")
-    #         athlete.athlete_url = result.css('div div a.col-md-5.title').attribute('href').value.strip
-    #         athlete.category = cat.css('div div div h2').text.gsub(/[^\d]/, '').to_i
-    #         athlete.bweight = result.css('div.col-4.not__cell__767 p')[0].children[2].text.delete!("\n")
-    #         athlete.group = result.css('div div div.col-md-4 div div.col-3.not__cell__767 p')[0].children[2].text.delete!("\n")
-    #         athlete.snatch = result.css('div div div.col-md-3 div div:nth-child(1) p strong').children.text.gsub('---',
-    #                                                                                                              '0').to_i
-    #         athlete.jerk = result.css('div div div.col-md-3 div div:nth-child(2) p strong').text.gsub('---', '0').to_i
-    #         athlete.total = result.css('div div div.col-md-3 div div:nth-child(3) p strong')[0].children[1].text.gsub(
-    #           '---', '0'
-    #         ).to_i
-    #         athlete.rank = result.css('div.col-2.not__cell__767 p').children[2].text.delete("\n").gsub('---', '0').to_i
-    #         # count += 1
-    #         # puts result
-    #         # puts athlete
-    #         puts athlete.name
-    #       end
-    #       count += 1
-    #       # category_loop = false
-    #       puts 'END'
-    #       puts count
-    #     end
-    #   end
-
-    #   puts count
-    #   # AthleteResult.all.each do |athlete|
-    #   #   puts "Name: #{athlete.name}"
-    #   # end
-    # end
+    ##########################################################################################
 
     def print_male_athletes(url)
       # self.make_all_men_athlete_informations_and_results_from_event(url)
@@ -315,48 +320,52 @@ module IwfRuby
       end
     end
 
+    def todo_
+      # ############################################################################
+      # # TODOs:
+      # def get_events_from_location(location)
+      #   # Get events from the location
+      # end
+
+      # def get_all_athlete_informations_and_results_from_event(url)
+      #   # Get all athlete informations and results from the event
+      #   # name, athlete_url, nation, birthdate, category, bweight, group,
+      #   # rank_s, snatch1, snatch2, snatch3,
+      #   # rank_cj, jerk1, jerk2, jerk3,
+      #   # rank, snatch, jerk, total
+      #   # doc = get_doc(url)
+      # end
+
+      # def get_athlete_informations_from_event(athlete)
+      #   # Get information about the athlete from the event
+      #   # name, athlete_url, nation, birthdate, category, bweight, group
+      # end
+
+      # def get_athlete_snatch_results_from_event(athlete)
+      #   # Get only snatch results from the event
+      #   # rank_s, snatch1, snatch2, snatch3
+      # end
+
+      # def get_athlete_clean_and_jerk_results_from_event(athlete)
+      #   # Get only clean and jerk results from the event
+      #   # rank_cj, jerk1, jerk2, jerk3
+      # end
+
+      # def get_athlete_total_results_from_event(athlete)
+      #   # Get totals (highest snatch + highest clean and jerk) from the event
+      #   # rank, snatch, jerk, total
+      # end
+    end
     ############################################################################
-    # TODOs:
-    def get_events_from_location(location)
-      # Get events from the location
-    end
-
-    def get_all_athlete_informations_and_results_from_event(url)
-      # Get all athlete informations and results from the event
-      # name, athlete_url, nation, birthdate, category, bweight, group,
-      # rank_s, snatch1, snatch2, snatch3,
-      # rank_cj, jerk1, jerk2, jerk3,
-      # rank, snatch, jerk, total
-      # doc = get_doc(url)
-    end
-
-    def get_athlete_informations_from_event(athlete)
-      # Get information about the athlete from the event
-      # name, athlete_url, nation, birthdate, category, bweight, group
-    end
-
-    def get_athlete_snatch_results_from_event(athlete)
-      # Get only snatch results from the event
-      # rank_s, snatch1, snatch2, snatch3
-    end
-
-    def get_athlete_clean_and_jerk_results_from_event(athlete)
-      # Get only clean and jerk results from the event
-      # rank_cj, jerk1, jerk2, jerk3
-    end
-
-    def get_athlete_total_results_from_event(athlete)
-      # Get totals (highest snatch + highest clean and jerk) from the event
-      # rank, snatch, jerk, total
-    end
   end
-  ############################################################################
 
   class Error < StandardError; end
 end
 
 # IwfRuby::Scraper.new.get_participant_countries('https://iwf.sport/results/results-by-events/?event_id=527')
 # find_event_result_men('2022 IWF Junior World Championships', 2022)
-# IwfRuby::Scraper.new.find_event_result_women("2012 IWF GRAND PRIX - PRESIDENT'S CUP", 2012)
+IwfRuby::Scraper.new.find_event_result_women("2012 IWF GRAND PRIX - PRESIDENT'S CUP", 2012)
 
 # https://iwf.sport/results/results-by-events/results-by-events-old-bw/?event_id=216
+
+# IwfRuby::Scraper.new.find_event_result_men("73rd MEN's and 16th WOMEN's WORLD CHAMPIONSHIPS", 2003)
