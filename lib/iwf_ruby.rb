@@ -255,7 +255,7 @@ module IwfRuby
             # count += 1
             # puts result
             # puts athlete
-            puts athlete.name
+            # puts athlete.name
             # count += 1
 
             result_array.push(athlete)
