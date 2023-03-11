@@ -1,4 +1,4 @@
-# iwf_ruby Beta
+# iwf_ruby
 
 A ruby library to scrape from the IWF (Internation Weightlifting Federation) website
 
